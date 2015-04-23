@@ -6,10 +6,10 @@ and a positional(extract common string) index, to support versioned documents qu
 The project mainly has two parts: build index, and query
 
 --------------------------------------------------------------------------------------------------
-Build index:
+**Build index**
 
 Data source preprocess Wiki pages(group of versions for the same page): 
-
+'''
 docid(1) {version0, version1, version2, ..., verion(m1 - 1)}
 docid(2) {version0, version1, version2, ..., verion(m2 - 1)}
 docid(3) {version0, version1, version2, ..., verion(m3 - 1)}
@@ -22,24 +22,25 @@ docid(n) {version0, version1, version2, ..., verion(mn - 1)}
                                   {term, term, term, ..., term}  (version1)
                                              ...
                                   {term, term, term, ..., term}  (version(m - 1))}
+'''
 it is like a docid with a 2D array of terms, term position in the array means the positon in the page
 We record this each input as src:
-
+'''
 for each 
     src --> nonpositional index tmp --> positonal index tmp
     if either tmp size > block size
         store as block
 after all src precessed -> merge sort(block) --> nonpositonal index 
                                              |-> positional index
-
+'''
 
 We gonna need several data structures:
 lexicon      ---  term: end chunk| start chunk|fileindex, start block addr, end block addr, doc num
 tmp lexicon  ---  term: blockindex, start block addr, end block addr
-doc dic      ---  docid: url, len, [time0, time1, ..., time(m - 1)] (version related time)
+doc dic      ---  docid: url, len, [time0, time1, ..., time(m - 1)]  (version related time)
 
-Nonposition
+**Nonposition**
 tmp index: 
-build tmp lexicon -> block file context: docid [freq0, freq1, freq2, ..., freq(m - 1)] (version freq)
+build tmp lexicon -> block file context: docid [freq0, freq1, freq2, ..., freq(m - 1)]  (version freq)
 
 
