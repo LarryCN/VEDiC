@@ -1,11 +1,12 @@
 # VEDiC #
-Versioned Document Collections: Build a two-level non-positional(set- and bag-oriented way) index 
-and a positional(extract common string) index, to support versioned documents query like Wiki.
+Versioned Document Collections: Build a two-level non-positional(set- and bag-
+oriented way) index and a positional(extract common string) index, to support 
+versioned documents query like Wiki.
 
 
 The project mainly has two parts: build index, and query
 
---------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 Build index
 
 Data source preprocess Wiki pages(group of versions for the same page): 
@@ -18,13 +19,13 @@ docid(n) {version0, version1, version2, ..., verion(mn - 1)}
                          |
                          | then parser
                          |
-   each input one 'group' : docid {term, term, term, ..., term}  (version0)
-                                  {term, term, term, ..., term}  (version1)
+each input one 'group' : docid {term, term, term, ..., term}(version0)
+                               {term, term, term, ..., term}(version1)
                                              ...
-                                  {term, term, term, ..., term}  (version(m - 1))}
+                               {term, term, term, ..., term}(version(m - 1))}
 
-it is like a docid with a 2D array of terms, term position in the array means the positon in the page
-We record this each input as src:
+it is like a docid with a 2D array of terms, term position in the array means 
+the positon in the page. We record this each input as src:
 
 for each 
     src --> nonpositional index tmp --> positonal index tmp
@@ -34,12 +35,15 @@ after all src precessed -> merge sort(block) --> nonpositonal index
                                              |-> positional index
 
 We gonna need several data structures:
-lexicon      ---  term: end chunk| start chunk|fileindex, start block addr, end block addr, doc num
-tmp lexicon  ---  term: blockindex, start block addr, end block addr
-doc dic      ---  docid: url, len, [time0, time1, ..., time(m - 1)]  (version related time)
+lexicon:
+term: endchunk|startchunk|fileindex, start_block_addr, end_block_addr, docnum
+tmp lexicon:
+term: blockindex, start_block_addr, end_block_addr
+doc_dic:
+docid: url, len, [time0, time1, ..., time(m - 1)]  (version related time)
 
 Nonposition
-tmp index: 
-build tmp lexicon -> block file context: docid [freq0, freq1, freq2, ..., freq(m - 1)]  (version freq)
+tmp index: build tmp lexicon -> block file context: 
+docid [freq0, freq1, freq2, ..., freq(m - 1)]  (version freq)
 
 
