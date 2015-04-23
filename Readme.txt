@@ -37,13 +37,22 @@ after all src precessed -> merge sort(block) --> nonpositonal index
 We gonna need several data structures:
 lexicon:
 term: endchunk|startchunk|fileindex, start_block_addr, end_block_addr, docnum
-tmp lexicon:
-term: blockindex, start_block_addr, end_block_addr
+
+tmp lexicon: term: blockindex, start_block_addr, end_block_addr
+
 doc_dic:
 docid: url, len, [time0, time1, ..., time(m - 1)]  (version related time)
 
+
 Nonposition
-tmp index: build tmp lexicon -> block file context: 
-docid [freq0, freq1, freq2, ..., freq(m - 1)]  (version freq)
+tmp index -> build tmp lexicon
+          -> block file context: docid [freq0, freq1, freq2, ..., freq(m - 1)]
+          -> hierarchical bit-vector 
+          -> count bit-vector frequency 
+before mergesort -> Huffman-coding for the bit-vector
+then mergsort: for each inverted index, chunk-wise  
+
+Positional 
+
 
 
