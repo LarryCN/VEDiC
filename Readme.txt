@@ -53,6 +53,6 @@ before mergesort -> Huffman-coding for the bit-vector
 then mergsort: for each inverted index, chunk-wise  
 
 Positional 
-
+tmp index
 
 
