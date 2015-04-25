@@ -53,5 +53,6 @@ before mergesort -> Huffman-coding for the bit-vector
 then mergsort: for each inverted index, chunk-wise  
 
 Positional 
-partition pages      -> map((doc, vers) ---> fragments), fragment size table
-nonpositional index  -> positional index by replacing (docid,...) with (fragid1,...)(fragid2,...)... according to the map
+partition pages -> map((doc, vers) ---> fragments), fragment size table
+                -> tmp index
+mergesort each inverted index list, chunk-wise compression
