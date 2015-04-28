@@ -91,8 +91,55 @@ def storedata():
 
 import hbit_vector
 import huffman_coding
+import collections
 
 huffman_tree = None
+
+def huffman_tree_store(root):
+    ret = [root.v]                  # bfs    no node write 0
+    q = collections.deque()
+    q.append(root)
+    count = 1
+    root.index = count
+    count += 1
+    while q:
+        node = q.popleft()
+        if node.left:
+            ret.append(node.left.v)
+            node.left.index = count
+            count += 1
+            q.append(node.left)
+        if node.right:
+            ret.append(node.right.v)
+            node.right.index = count
+            count += 1
+            q.append(node.right)
+    s = str(ret[0])
+    for i in xrange(1, len(ret)):
+        s += ' ' + str(ret[i])
+    ls = str(len(ret))
+
+    ret = []
+    q.append(root)
+    while q:
+        node = q.popleft()
+        ret.append([node.index])
+        if node.left:
+            ret[-1].append(node.left.index)
+            q.append(node.left)
+        else: ret[-1].append(0)
+        if node.right:
+            ret[-1].append(node.right.index)
+            q.append(node.right)
+        else: ret[-1].append(0)
+
+    f = open(config.HUFFMANTREEPATH, 'wb')
+    f.write(ls + '\n')
+    f.write(s + '\n')
+    for i in ret:
+        s = str(i[0]) + ' ' + str(i[1]) + ' ' + str(i[2]) + '\n'
+        f.write(s)
+    f.close()
 
 def huffman_gen():
     global huffman_tree
@@ -107,6 +154,9 @@ def huffman_gen():
         if tmp > maxl:
             maxl = tmp
     print(hbit_vector.bv_count, maxl, 'done')   # vec tmpid: [freq, (bit vector), bit length, huffman code(code 0 at bit 0)]
+    huffman_tree_store(huffman_tree)
+    print('huffman tree write done')
+    
 
 def source_file_pasrse_NZ(path):
     global doc_dic
@@ -139,6 +189,7 @@ def source_file_pasrse_NZ(path):
     block.store()
     mgr.state = PENDING
     huffman_gen()              # huffman_coding
+    hbit_vector.store()        # store bit vector info
     manager.mergesort(mgr)
 
     manager.structrestore(doc_dic, 'doc_dic')

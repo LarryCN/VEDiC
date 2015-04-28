@@ -64,3 +64,22 @@ def encode(v, m):
     ret, rp = check_1(result[deep])
     if rp: rv.append(rp)
     return rv
+
+import config
+
+def store():
+    global vec_dic
+    print(vec_dic)
+    print('bit vector store begin')
+    m = config.BIT_M
+    f = open(config.HBITVECTORPATH, 'wb')
+    f.write((str(len(vec_dic)) + '\n'))
+    for i in sorted(vec_dic):
+        v = vec_dic[i][1]
+        s = str(v[0])
+        for j in xrange(1, m):
+            s += ' ' + str(v[j])
+        f.write(s + '\n')
+    f.close()
+    print("done")
+

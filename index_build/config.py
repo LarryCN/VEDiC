@@ -25,4 +25,7 @@ CACHE_BLOCK = C_BLOCKSIZE
 CACHE_SIZE = 128 * 1024 * 1024
 
 BIT_M = 5  # bit vector
+HUFFMANTREEPATH = '/Users/larry/Code/wsn/index/sourcedata/block/huffman_tree' # store huffman tree  bfs, if no left or right, write 1
+HBITVECTORPATH = '/Users/larry/Code/wsn/index/sourcedata/block/hbit_vector' # store hierarchical bit vector info first length, then each line, m value.
+
 
