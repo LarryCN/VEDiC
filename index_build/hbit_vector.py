@@ -69,7 +69,6 @@ import config
 
 def store():
     global vec_dic
-    print(vec_dic)
     print('bit vector store begin')
     m = config.BIT_M
     f = open(config.HBITVECTORPATH, 'wb')
