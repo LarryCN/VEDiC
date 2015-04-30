@@ -166,13 +166,20 @@ class iindex:
                 e = bvoff[off + inc - 1]
                 data = bv[s: e]  
                 lbit, hcode = huffman_code(data)   # lbit is the length of each related huffmancode of docid, hcode is the huffman code of the whole chunk
-                
-                rlbit = simple9.simple9_encode(data, len(lbit))                    # encode with simple9
+               
+                """ metadata   0xxxxx <-- length   lastdocid, docoff, bvoff, chunkaddr
+                    start --- docoff -> docid simple9
+                    docff --- bvoff  -> each bit vector huffman code length
+                    bvoff --- chunkaddr -> huffman code of the all chunk
+                """
+                #rlbit = simple9.simple9_encode(data, len(lbit))                    # encode with simple9
+                rlbit = simple9.simple9_encode(lbit, len(lbit))                    # encode with simple9
                 rlbit = [hex(x)[2:] for x in rlbit]                                    
                 rlbit = str(rlbit)[1:-1].replace('\'', '').replace(',', '').replace(' ', '')
                 
                 rh = hex(hcode)
                 rh = rh[2:].replace('L', '')
+                rh = rh[::-1]
 
                 r = rdoc + rlbit + rh
                 chunksize = len(r)
