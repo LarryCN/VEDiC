@@ -91,7 +91,6 @@ def merge():
 	with open("index/indexf") as index:
 		dupList=[]
 		prev=None
-		dupFlag=False
 		for line in index:
 			#print sys.getsizeof(self.outBuf)
 			record=line.split(' ',1)
@@ -99,25 +98,23 @@ def merge():
 			if not record[0].isalnum():
 				continue
 			if record[0].lower()==prev:
-				dupFlag=True
 				a=re.split(' ',record[1])
 				b=[[int(a[2*i]),int(a[2*i+1])] for i in xrange(len(a)/2)]
 				dupList.extend(b)
 			else:
-				if dupFlag:
-					dupList=sorted(dupList, key=compare)						
-					dupFlag=False
+				dupList=sorted(dupList, key=lambda a:a[0])
 				#print str(dupList)
 				#generate the difference of fragID instead the actual DocID
 				prevf=0
 				#print(dupList)
 				tmp=[]
-				print "**********************************************"
+				#if prev:print "******************"+prev+"******************"
+				#else:print "********************************************"
 				for x in dupList:
-					print x
 					try:
 						#print(y[0])
-						tmp.append(str(x[0]-prevf)+" "+str(x[1]))
+						#print str(x[0]-prevf)+" "+str(x[1])
+						tmp.append([x[0]-prevf,x[1]])
 						prevf=x[0]
 						#print(x.split(' ',1)[0])
 						#print("************")
@@ -135,7 +132,8 @@ def merge():
 					for record in outBuf:
 						lexiconfile.write(record[0]+' '+str(bytec)+' ')
 						for a in record[1]:
-							outstr=a[0]+" "+a[1]+" "
+							#print a
+							outstr=str(a[0])+" "+str(a[1])+" "
 							bytec+=len(outstr)
 							indexfile.write(outstr)
 						indexfile.write('\n')
@@ -147,7 +145,7 @@ def merge():
 	for record in outBuf:
 		lexiconfile.write(record[0]+' '+str(bytec)+' ')
 		for a in record[1]:
-			outstr=a[0]+" "+a[1]+" "
+			outstr=str(a[0])+" "+str(a[1])+" "
 			bytec+=len(outstr)
 			indexfile.write(outstr)
 		indexfile.write('\n')
@@ -166,5 +164,5 @@ def compare(p):
 	return q
 	
 if __name__=='__main__':
-	process()
-	#merge()
+	#process()
+	merge()
