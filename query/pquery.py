@@ -1,4 +1,5 @@
 import config
+import time
 
 class PQuerier:
 
@@ -10,10 +11,16 @@ class PQuerier:
 		
 	def getPositions(self,docid,versid,terms):
 		lists=self.loadlists(self.indexf,terms,self.lexicon)
-		frags=self.dvf[docid][versid]
-		poss=self.locate(frags,lists,self.fsize)
+		poss=[]
+		frags=[]
+		fragsdict={}
+		for i in xrange(len(docid)):
+			curfrags=self.dvf[docid[i]][versid[i]]
+			frags.append(curfrags)
+			for f in curfrags:
+				fragsdict[f]=i
+		poss=self.locate(fragsdict,frags,lists,self.fsize)
 		return poss
-		
 	def loadfsize(self):
 		fsizef=open(config.P_INDEX_FSIZE_PATH,"r")
 		records=fsizef.readline()
@@ -44,50 +51,61 @@ class PQuerier:
 		lists=[]
 		for t in terms:
 			meta=lexicon[t]
+			f1=time.time()
 			indexf.seek(meta[0])
 			a=indexf.read(meta[1])
 			b=a.split()
 			#print b[:10]
-			tlist=[[int(b[2*i]),int(b[2*i+1])] for i in xrange(len(b)/2)]
-			lists.append(tlist)
+			print "len b:"+str(len(b))
+			#tlist=[[b[2*i],b[2*i+1]] for i in xrange(len(b)/2)]
+			#for i in xrange(len(b)):
+			lists.append(b)
 		return lists
 	
-	def locate(self,frags,lists,fsize):
+	def locate(self,fragsdict,frags,lists,fsize):
 		valid=True
-		locatmap=[]
-		for l in lists:
-			curmap={}
-			for f in frags:	curmap[f]=[]
-			locatmap.append(curmap)
+		poslists=[]
+		for i in xrange(len(frags)):
+			poslists.append([])
+			for j in xrange(len(lists)):
+				poslists[i].append([])
 		for i in xrange(len(lists)):
 			valid=False
 			curlist=lists[i]
-			curmap=locatmap[i]
 			prevfid=0
 			print curlist[:50]
-			for posting in curlist:
-				fid=posting[0]+prevfid
-				if fid in curmap:
+			for j in xrange(len(curlist)/2):
+				fid=int(curlist[2*j])+prevfid
+				if fid in fragsdict:
 					valid=True
-					curmap[fid].append(posting[1])
+					poslists[fragsdict[fid]][i].append([fid,int(curlist[2*j+1])])
 				prevfid=fid
 			print valid
 			if not valid:return False
-		poslist=[]
-		for i in xrange(len(lists)):
-			curposlist=[]
-			curmap=locatmap[i]
+		outposlists=[]
+		for i in xrange(len(frags)):
+			outposlists.append([])
+			for j in xrange(len(lists)):
+				outposlists[i].append([])
+		for i in xrange(len(frags)):
 			pos=0
-			for fid in frags:
-				for rpos in curmap[fid]:
-					curposlist.append(pos+rpos)
+			cursor=[]
+			for j in xrange(len(lists)):
+				cursor.append(0)
+			for fid in frags[i]:
+				for j in xrange(len(lists)):
+					if cursor[j]<len(poslists[i][j]) and fid==poslists[i][j][cursor[j]][0]:
+						outposlists[i][j].append(poslists[i][j][cursor[j]][1]+pos)
+						cursor[j]+=1
 				pos+=fsize[fid]
-			poslist.append(curposlist)
-		return poslist
+		return outposlists
 	
 if __name__=='__main__':
 	#a testing example: terms=terms,docid=0,vid=0
 	pq=PQuerier()
-	ide=pq.getPositions(1299,11,['actress','best'])
+	start=time.time()
+	ide=pq.getPositions([1299,1320,432],[11,2,21],['actress','best'])
+	end=time.time()
 	print ide
+	print end-start
 	
