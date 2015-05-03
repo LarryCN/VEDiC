@@ -1,6 +1,5 @@
 import config
 import time
-import cProfile
 
 class PQuerier:
 
@@ -94,7 +93,7 @@ class PQuerier:
 				for j in xrange(len(lists)):
 					if fid in poslists[i][j]:
 						for x in poslists[i][j][fid]:
-							outposlists[i][j].append(x+pos)
+							outposlists[i][j].append([x+pos,j])
 				pos+=fsize[fid]
 		return outposlists
 	
