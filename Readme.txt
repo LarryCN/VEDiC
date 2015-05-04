@@ -79,4 +79,19 @@ To debug could be in the cindex_code to tpye: make  (which depends on Makefile)
 
 About file decription: some of the files are the same as the previous homework
 So please reference github/index_and_query/Readme.txt
+------------------------------------------------------------------------------
+Base line: index size 2.1GB
+
+Using our approach: positional index total 144MB
+                   
+non-positional index 3 temporary files(roughly 67MB), 
+as we change bit-vector to a tmp value, roughly total data should be more than 400MB.
+
+doc_dic 1.3 MB 1645 group versions
+lexicon 20 MB roughly 261221 different terms
+inverted index 24 MB 
+
+serach mostly keep in 10 ms
+data:
+https://drive.google.com/a/nyu.edu/folderview?id=0B0XJEhLpK6zYflBmX0daa3pRSFJNa2lwU05XVHlZbWpac284NWtjbWxWa3hQQi1ya3pKMXc&usp=sharing
 
