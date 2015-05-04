@@ -45,6 +45,7 @@ def encode(v, m):
         result[deep].append(ret)
         if rp: rv.append(rp)
         l += 1
+    rv.reverse()   # TODO only one level
     while l > m:
         deep += 1
         mod = l % m
@@ -70,6 +71,8 @@ import config
 def store():
     global vec_dic
     print('bit vector store begin')
+    #for i in vec_dic:
+    #    print(i, vec_dic[i])
     m = config.BIT_M
     f = open(config.HBITVECTORPATH, 'wb')
     f.write((str(len(vec_dic)) + '\n'))
@@ -81,4 +84,11 @@ def store():
         f.write(s + '\n')
     f.close()
     print("done")
+    """
+    for i in vec_dic:
+        if vec_dic[i][2] > 4:
+            print(i, vec_dic[i])
+        else:
+            print(i, vec_dic[i], '=======================', vec_dic[i][2])
+    """
 

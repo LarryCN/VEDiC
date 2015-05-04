@@ -142,9 +142,9 @@ def mergesort(mgr):
     invertedindex_chunkwise_store(inverted, fileindex, lexicon)
 
     structrestore(lexicon, 'lexicon')
+
     """
     for i in sorted(lexicon):
         print(i, lexicon[i])
-
     while 1:pass
     """

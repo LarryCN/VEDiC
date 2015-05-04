@@ -31,7 +31,7 @@ def huffman_code(bv):
         count += m
         lbit.append(l)
         off += l
-    return lbit, bicode
+    return lbit, bicode, off
 
 """ docid compress by increasing diff
     like 51, 59, 69, 80 -> 51, 8, 10, 11
@@ -165,7 +165,7 @@ class iindex:
                 else: s = bvoff[off - 1]
                 e = bvoff[off + inc - 1]
                 data = bv[s: e]  
-                lbit, hcode = huffman_code(data)   # lbit is the length of each related huffmancode of docid, hcode is the huffman code of the whole chunk
+                lbit, hcode, bitlen = huffman_code(data)   # lbit is the length of each related huffmancode of docid, hcode is the huffman code of the whole chunk
                
                 """ metadata   0xxxxx <-- length   lastdocid, docoff, bvoff, chunkaddr
                     start --- docoff -> docid simple9
@@ -180,6 +180,14 @@ class iindex:
                 rh = hex(hcode)
                 rh = rh[2:].replace('L', '')
                 rh = rh[::-1]
+                if bitlen > (len(rh) << 2):
+                    #print("===========================", bitlen, len(rh))
+                    diff = bitlen - (len(rh) << 2)
+                    zeronum = diff >> 2
+                    if diff & 3:
+                        zeronum += 1;
+                    rh += '0' * zeronum
+                    #print("---------------------------", zeronum)
 
                 r = rdoc + rlbit + rh
                 chunksize = len(r)

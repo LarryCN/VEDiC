@@ -13,16 +13,19 @@ CHECKING = 2
 
 doc_dic = {}
 docid = 0
-url_dic = {}
 
 mgr = manager.manager()
 
 #COUNTNUM = 12000
-COUNTNUM = 200
-COUNTNUM_L = 10
+COUNTNUM = 500
+COUNTNUM_L = 20
+
+mgrcount = 0
 
 def blockmanage(docid, parsed_data):
-    global mgr
+    global mgr, mgrcount
+    print(mgrcount)
+    mgrcount += 1
     if mgr.state == PENDING:
         block = subindex.subindex(mgr.blocknum, config.DATAPATH)
         mgr.blocknum += 1
@@ -52,36 +55,23 @@ def blockmanage(docid, parsed_data):
     return termnum
     
 
-def parse_index_info(data, info):
-    global url_dic, docid
-    info = info.split('\n')
-    offset = 0
-    count = 0
-    for i in info:
-        count += 1
-        page_info = i.split(' ')
-        if len(page_info) > 3:
-            url = page_info[0]
-            size = int(page_info[3])
-            page = data[offset:offset + size]
-            offset += size
-            buf = page + page + "1"
-            try:
-                #ret = parser.parser(url, page, buf, 2 * len(page) + 1)
-                ret = parser.parser(url, page, buf, 2 * len(page) + 1)
-                vdata = []
-                for i in range(20):           # TODO add version here
-                    vdata.append(ret[1])
-            except Exception as e:
-                continue
-            if ret[0] > 0:
-                if url not in url_dic:
-                    url_dic[url] = docid
-                    #termnum = blockmanage(docid, ret[1])
-                    termnum = blockmanage(docid, vdata)
-                    doc_dic[docid] = [url, termnum]    # url, num of terms TODO version time
-                    docid += 1
-
+def parse_index_info(docid, data):
+    vdata = []
+    for i in range(len(data)):
+        page = data[i]
+        page = "<p>" + page + "</p>"
+        try:
+            buf = page + page + '1'
+            ret = parser.parser('', page, buf, 2 * len(page) + 1)
+            vdata.append(ret[1])
+            if ret[0] <= 0:
+                print("------------------------------------")
+        except Exception as e:
+            print('error')
+            print(e)
+            while 1:pass
+            continue
+    return blockmanage(docid, vdata)
 
 def storedata():
     print("store")
@@ -146,6 +136,14 @@ def huffman_gen():
     print('generate huffman code for bit vector')
     vec = hbit_vector.vec_dic
     huffman_tree = huffman_coding.encode(vec)
+    tv = 0
+    bit = 0
+    for i in vec:
+        info = vec[i]
+        tv += info[0]
+        bit += info[0] * info[2]
+    print('tv', tv, 'bit', bit)
+    while 1:pass
     l = []
     maxl = 0
     for i in vec:
@@ -157,31 +155,33 @@ def huffman_gen():
     huffman_tree_store(huffman_tree)
     print('huffman tree write done')
     
+import readdata
 
 def source_file_pasrse_NZ(path):
     global doc_dic
-    print("source_file parser NZ", time.ctime())
-    #for i in range(82):
-    for i in range(1):
-        fpath = path + str(i)
-        print(fpath)
-        
+    print("wiki data parser", time.ctime())
+    df = open(config.WIKIDATAPATH, "rb")
+    idxf = open(config.WIKIMAPPATH, "rb")
+    ex = readdata.extractor(df, idxf)
+    while ex.nextDoc():
+        docid = int(ex.docid)
+        if docid not in doc_dic:
+            doc_dic[docid] = [ex.title]
+            vtime = []
+            vdata = []
+            count = 0
+        while ex.nextVers():
+            tmp = ex.versdata[0].replace('T', '').replace('Z', '').replace(':', '').replace('-', '')
+            tmp = '0x' + tmp
+            tmp = int(tmp, 16)
+            vtime.append(tmp)
+            vdata.append(ex.versdata[1])
         try:
-            findex = gzip.open(fpath + '_index', 'rb')
-            info = findex.read()
-            findex.close()
-            fdata = gzip.open(fpath + '_data', 'rb')
-            data = fdata.read()
-            fdata.close()
+            termnum = parse_index_info(docid, vdata)
+            doc_dic[docid].append(termnum)
+            doc_dic[docid].append(vtime)
         except Exception as e:
-            print(e)
-            continue
-        try:
-            parse_index_info(data, info)
-        except Exception as e:
-            print('=================')
-            print(e)
-            continue
+            print("======================")
     print("------- done ", time.ctime())
     """-----------close all the index block---------"""
     block = mgr.block[mgr.blocknum - 1]
