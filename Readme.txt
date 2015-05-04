@@ -72,6 +72,8 @@ Dir preprocesss is to deal with raw Wiki data to the data we use.
 After config path in the extract.py run: python extract.py
 
 Dir query_code has the code to run query process, just python daat.py
+Before running code, need to config config.py
+mainly to config data path
 And there is cindex_code, which includes the c code of mainly funcitons
 To debug could be in the cindex_code to tpye: make  (which depends on Makefile)
 
