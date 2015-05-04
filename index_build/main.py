@@ -143,7 +143,6 @@ def huffman_gen():
         tv += info[0]
         bit += info[0] * info[2]
     print('tv', tv, 'bit', bit)
-    while 1:pass
     l = []
     maxl = 0
     for i in vec:
