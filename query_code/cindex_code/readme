@@ -1,0 +1,3 @@
+gcc -c -fpic -I/usr/include/python2.7/ lru.c hbit_vector.c huffman.c hash.c bm25.c index_if.c index_op.c term_op.c simple9.c cindexmodule.c
+gcc -shared -lpython lru.o hbit_vector.o huffman.o hash.o bm25.o index_if.o index_op.o term_op.o simple9.o cindexmodule.o -o cindexmodule.so
+
