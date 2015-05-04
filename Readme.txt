@@ -87,6 +87,11 @@ To recompile cindexmodule code see readme in the query_code/cindex_code/
 About file decription: some of the files are the same as the previous homework
 So please reference github/index_and_query/Readme.txt
 ------------------------------------------------------------------------------
+Data
+As each wiki dataset is 84GB(too large), and include lots of redirection data,
+which is not useful, we need to extract useful data firstly.
+Then we use one dataset(each group get most 30 versions), extract 1.4GB data.
+
 Base line: index size 2.1GB
 
 Using our approach: positional index total 144MB
@@ -94,7 +99,8 @@ Using our approach: positional index total 144MB
 non-positional index 3 temporary files(roughly 67MB), 
 as we change bit-vector to a tmp value, roughly total data should be more than 400MB.
 
-doc_dic 1.3 MB 1645 group versions
+doc_dic 1.3 MB 1645 group versions then roughly 48000 pages
+average page words number about 4900(about as 15 times as page in hw nz)
 lexicon 20 MB roughly 261221 different terms
 inverted index 24 MB 
 
