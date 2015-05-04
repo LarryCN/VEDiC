@@ -56,3 +56,25 @@ Positional
 partition pages -> map((doc, vers) ---> fragments), fragment size table
                 -> tmp index
 mergesort each inverted index list, chunk-wise compression
+------------------------------------------------------------------------------
+file struct and code running
+
+Dir index_build has the code to build index:
+first config config.py data path
+for non-positional index build use: python main.py
+for positional index build use: pindexer.py
+For one thing to notice is that we use the parsermodule.so from the previous hw.
+However as we use seperate version, so, for non-positional use
+index_build/parsermodule.so
+For positional index, need to use Cparser/parsermodule.so
+
+Dir preprocesss is to deal with raw Wiki data to the data we use.
+After config path in the extract.py run: python extract.py
+
+Dir query_code has the code to run query process, just python daat.py
+And there is cindex_code, which includes the c code of mainly funcitons
+To debug could be in the cindex_code to tpye: make  (which depends on Makefile)
+
+About file decription: some of the files are the same as the previous homework
+So please reference github/index_and_query/Readme.txt
+
