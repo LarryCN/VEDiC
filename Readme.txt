@@ -107,6 +107,19 @@ inverted index 24 MB
 serach mostly keep in 10 ms
 data:
 https://drive.google.com/a/nyu.edu/folderview?id=0B0XJEhLpK6zYflBmX0daa3pRSFJNa2lwU05XVHlZbWpac284NWtjbWxWa3hQQi1ya3pKMXc&usp=sharing
+
+
+Aother data set 4.36GB
+non-positional index 7 temprorary files(roughly 175MB)
+count on bit-vector roughtly at least 1GB
+doc_dic 3.5 MB 4555, total roughly 135000 pages
+average page words about 5100. 
+
+lexicon 41.5 MB 560929 different terms
+inverted index about 64MB 
+positional index all data structure 408MB
+
+query time less than 50ms
 ------------------------------------------------------------------------------
 some file description(other could be seen from previous readme)
 
